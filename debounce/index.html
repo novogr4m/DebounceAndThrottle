@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>debounce</title>
+    <style>
+        h1{
+            height: 5000px;
+        }
+        #btn{
+            position: fixed;
+            bottom: 100px;
+            right: 70px;
+            display: none;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <!-- html part -->
+    <h1>it is a long page!</h1>
+    <button id="btn">click me back to top</button>
+    <!-- script part -->
+    <script>
+        const btn=document.getElementById("btn"); 
+        function onScrollTopShowBtn(...args){
+            const scrollTop=document.documentElement.scrollTop || doc.body.scrollTop;
+            console.log(scrollTop);
+            console.log(args)
+            if(scrollTop>1000){
+                btn.style.display='block';
+            }
+            else{
+                btn.style.display='none';
+            }
+        }
+        //debounce(fn,delay) fn:要执行的函数 delay:延时，即动作停止后delay秒执行fn函数
+        function debounce(fn,delay){
+            let timer=null;
+
+            //debounce  first way of writing
+                // return function(){
+                //     if(timer){
+                //         clearTimeout(timer);
+                //         timer=setTimeout(()=>{
+                //             fn()
+                //             timer=null;
+                //         },delay);
+                //     }
+                //     else{
+                //         timer=setTimeout(()=>{
+                //             fn()
+                //             timer=null;
+                //         },delay);
+                //     }
+                // }
+            
+            //debounce  second way of writing
+                return function(){
+                    clearTimeout(timer);
+                    timer=setTimeout(()=>{
+                        fn();
+                    },delay);
+                }
+
+            //debounce also can delivery event
+                return function(...args){
+                    clearTimeout(timer);
+                    timer=setTimeout(()=>fn(...args),delay);
+                }
+        }
+
+        window.onscroll = debounce(onScrollTopShowBtn,300);
+    </script>
+</body>
+</html>

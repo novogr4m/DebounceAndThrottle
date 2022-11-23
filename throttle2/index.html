@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>throttle2</title>
+    <style>
+        h1{
+            height: 5000px;
+        }
+        #btn{
+            position: fixed;
+            bottom: 100px;
+            right: 70px;
+            display: none;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <!-- html part -->
+    <h1>it is a long page!</h1>
+    <button id="btn">click me back to top</button>
+    <!-- script part -->
+    <script>
+        const btn=document.getElementById("btn"); 
+        function onScrollTopShowBtn(...args){
+            const scrollTop=document.documentElement.scrollTop || doc.body.scrollTop;
+            //打印坐标
+            console.log(scrollTop);
+            
+            if(scrollTop>1000){
+                btn.style.display='block';
+            }
+            else{
+                btn.style.display='none';
+            }
+        }
+        //throttle2
+        //实现“回调函数第一次是否触发的判断的起始时间是用户一次触发事件的时间”
+        function throttle(fn,delay){
+            let done = false;
+
+            return function(...args){
+                if(!done){
+                    setTimeout(()=>{
+                        fn(...args);
+                        done = false;
+                    },delay);
+                    done = true;
+                }
+            }
+        }
+        window.onscroll = throttle(onScrollTopShowBtn,300);
+  
+    </script>
+</body>
+</html>

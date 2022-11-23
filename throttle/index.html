@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>throttle</title>
+    <style>
+        h1{
+            height: 5000px;
+        }
+        #btn{
+            position: fixed;
+            bottom: 100px;
+            right: 70px;
+            display: none;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <!-- html part -->
+    <h1>it is a long page!</h1>
+    <button id="btn">click me back to top</button>
+    <!-- script part -->
+    <script>
+        const btn=document.getElementById("btn"); 
+        function onScrollTopShowBtn(...args){
+            const scrollTop=document.documentElement.scrollTop || doc.body.scrollTop;
+            //打印坐标
+            console.log(scrollTop);
+
+            if(scrollTop>1000){
+                btn.style.display='block';
+            }
+            else{
+                btn.style.display='none';
+            }
+        }
+        //throttle 
+        //基本思想：用现在函数执行的时间去减掉上一个函数执行的时间 如果时间差大于delay 则执行函数内的动作
+        function throttle(fn,delay){
+            let record = Date.now();
+
+            return function(...args){
+                const now = Date.now();
+                const interval = now - record;
+                if(interval > delay){
+                    fn(...args);
+                    record = now;
+                }
+            }
+        }
+        window.onscroll = throttle(onScrollTopShowBtn,300);
+        //存在问题 ： 回调函数第一次是否触发判断的起始时间是上行代码执行的的时间而不是第一次触发事件的时间
+        //           可以简单理解为第一次的起始时间是进入网页的时间 所以如果当进入网页后的时间大于delay,此时触发事件会立即执行。
+        //           解决方法：设置一个定时器
+    </script>
+</body>
+</html>
